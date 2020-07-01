@@ -1,11 +1,11 @@
-#going
+# going
 Take a list of hostnames and check connectivity by pinging each host.
-##Installation
+## Installation
 ```
 $ go get github.com/tacbliw/going
 ```
 
-##Usage
+## Usage
 ```
 $ going /path/to/host/list
 ```
