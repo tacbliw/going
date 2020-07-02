@@ -1,4 +1,4 @@
-# going
+# gp
 Take a list of hostnames and check connectivity by pinging each host.
 ## Installation
 ```
