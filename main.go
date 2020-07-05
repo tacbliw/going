@@ -70,7 +70,7 @@ func resolves(u string) bool {
 func tryPing(url string) {
 	pinger, err := ping.NewPinger(url)
 	if err != nil {
-		fmt.Printf("Cannot initialize Pinger: %s", err)
+		// fmt.Printf("Cannot initialize Pinger: %s", err)
 		return
 	}
 	pinger.Count = 1
