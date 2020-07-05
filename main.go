@@ -30,7 +30,7 @@ func main() {
 	sc := bufio.NewScanner(input)
 
 	urls := make(chan string, 128)
-	concurrency := 10
+	concurrency := 30
 	var wg sync.WaitGroup
 	wg.Add(concurrency)
 
@@ -70,7 +70,7 @@ func resolves(u string) bool {
 func tryPing(url string) {
 	pinger, err := ping.NewPinger(url)
 	if err != nil {
-		fmt.Printf("Cannot initialize Pinger.\n")
+		fmt.Printf("Cannot initialize Pinger: %s", err)
 		return
 	}
 	pinger.Count = 1
