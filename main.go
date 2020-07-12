@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"flag"
 	"fmt"
-	"io"
 	"net"
 	"os"
 	"sync"
@@ -14,12 +13,19 @@ import (
 )
 
 func main() {
+	var (
+		concurrentFlag int
+		fileFlag       string
+		timeoutFlag    int
+	)
+	flag.IntVar(&concurrentFlag, "c", 30, "Number of concurrent goroutines.")
+	flag.StringVar(&fileFlag, "f", "", "Use input from file instead of stdin.")
+	flag.IntVar(&timeoutFlag, "t", 500, "Timeout duration for each ping in miliseconds.")
 	flag.Parse()
 
-	var input io.Reader
-
-	if flag.NArg() > 0 {
-		file, err := os.Open(flag.Arg(0))
+	input := os.Stdin
+	if fileFlag != "" {
+		file, err := os.Open(fileFlag)
 		if err != nil {
 			fmt.Printf("Failed to open input file: %s\n", err)
 			os.Exit(1)
@@ -30,7 +36,7 @@ func main() {
 	sc := bufio.NewScanner(input)
 
 	urls := make(chan string, 128)
-	concurrency := 30
+	concurrency := concurrentFlag
 	var wg sync.WaitGroup
 	wg.Add(concurrency)
 
@@ -42,7 +48,7 @@ func main() {
 					// fmt.Printf("Cannot resolve: %s\n", url)
 					continue
 				}
-				tryPing(url)
+				tryPing(url, timeoutFlag)
 			}
 		}()
 	}
@@ -67,7 +73,7 @@ func resolves(u string) bool {
 	return true
 }
 
-func tryPing(url string) {
+func tryPing(url string, timeout int) {
 	pinger, err := ping.NewPinger(url)
 	if err != nil {
 		// fmt.Printf("Cannot initialize Pinger: %s", err)
